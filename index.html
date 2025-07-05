@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mirr - My Self Today</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <aside class="sidebar-nav">
+            <div class="app-logo">Mirr</div>
+            <ul>
+                <li>
+                    <a href="#home" class="nav-item active" data-section="home">
+                        <i class="fas fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#food" class="nav-item" data-section="food">
+                        <i class="fas fa-utensils"></i>
+                        <span>Food</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#plan" class="nav-item" data-section="plan">
+                        <i class="fas fa-calendar-check"></i>
+                        <span>Plan</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#graph" class="nav-item" data-section="graph">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Graph</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#account" class="nav-item" data-section="account">
+                        <i class="fas fa-user"></i>
+                        <span>Account</span>
+                    </a>
+                </li>
+            </ul>
+            <button class="logout-btn" id="logout-btn-sidebar"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        </aside>
+
+        <main class="main-content">
+            <section id="login" class="app-section active">
+                <div class="login-content">
+                    <h1 class="app-title">Mirr</h1>
+                    <p class="tagline">เริ่มต้นการผจญภัยเพื่อสุขภาพของคุณ!</p>
+                    <div class="character-glimpse"></div>
+                    <input type="text" id="username-input" placeholder="ชื่อนักผจญภัยของคุณ">
+                    <input type="number" id="weight-input" placeholder="น้ำหนัก (ก.ก.)" min="1" max="300">
+                    <input type="number" id="height-input" placeholder="ส่วนสูง (ซ.ม.)" min="1" max="250">
+                    <button class="btn primary-btn" id="start-adventure-btn">🚀 เริ่มต้นการผจญภัย</button>
+                    <p class="quote">"การเดินทางพันลี้ เริ่มต้นที่ก้าวแรกเสมอ"</p>
+                </div>
+            </section>
+
+            <section id="home" class="app-section">
+                <div class="section-header">
+                    <h2>🏠 My Self Today (<span id="display-username">นักผจญภัย</span>)</h2>
+                </div>
+                <div class="home-content">
+                    <div class="avatar-container">
+                        <img id="user-avatar" src="https://via.placeholder.com/150/ADD8E6/000000?text=Avatar" alt="User Avatar">
+                        <div id="avatar-mood" class="mood-indicator">😄</div>
+                    </div>
+                    <div class="status-summary">
+                        <h3>Mood Today: <span id="current-mood">😄 Happy</span></h3>
+                        <div class="status-bars">
+                            <div class="status-bar health">
+                                <span class="label">Health</span>
+                                <div class="bar-fill" style="width: 80%;"></div>
+                                <span class="value" id="health-value">80%</span>
+                            </div>
+                            <div class="status-bar energy">
+                                <span class="label">Energy</span>
+                                <div class="bar-fill" style="width: 70%;"></div>
+                                <span class="value" id="energy-value">70%</span>
+                            </div>
+                            <div class="status-bar mood">
+                                <span class="label">Mood</span>
+                                <div class="bar-fill" style="width: 90%;"></div>
+                                <span class="value" id="mood-value">90%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="daily-progress">
+                        <h3>⏱ Focus / Today's Progress</h3>
+                        <ul id="daily-missions-completed">
+                            </ul>
+                    </div>
+                    <div class="reward-summary">
+                        <h3>🎁 Rewards</h3>
+                        <p>XP: <span id="xp-points">1250</span> / Level: <span id="user-level">5</span></p>
+                        <div class="level-progress-bar">
+                            <div class="progress-fill" style="width: 50%;"></div>
+                        </div>
+                    </div>
+                    <button class="btn primary-btn shortcut-btn" onclick="showSection('plan')">📌 Go to Today's Mission</button>
+                </div>
+            </section>
+
+            <section id="food" class="app-section">
+                <div class="section-header">
+                    <h2>🍱 Food / Hydration</h2>
+                </div>
+                <div class="food-content">
+                    <div class="food-log">
+                        <h3>🥗 Food Log</h3>
+                        <div class="log-entry">
+                            <input type="text" id="food-input" placeholder="มื้อนี้กินอะไรไป? (เช่น ข้าวผัด, สลัดอกไก่)">
+                            <button class="btn secondary-btn" id="add-food-btn">บันทึก</button>
+                        </div>
+                        <ul id="food-list">
+                            </ul>
+                    </div>
+                    <div class="water-tracker">
+                        <h3>💧 Water Tracker</h3>
+                        <div class="water-controls">
+                            <input type="number" id="water-amount-input" placeholder="ปริมาณ (มล.)" value="250" min="50" step="50">
+                            <button class="btn quick-add-btn" id="add-water-btn"><i class="fas fa-plus"></i> เพิ่มน้ำ</button>
+                        </div>
+                        <p>รวม: <span id="water-total-ml">0</span> มล. / เป้าหมาย: <span id="water-goal-ml">2000</span> มล.</p>
+                        <p id="water-impact-message" class="food-good">ดื่มน้ำดีมาก!</p>
+                    </div>
+                    <div class="energy-impact">
+                        <h3>🔥 ผลลัพธ์ต่ออวตาร</h3>
+                        <p id="avatar-food-impact">อวตารของคุณดู <strong>สดใสขึ้น!</strong></p>
+                    </div>
+                    <div class="tips-section">
+                        <h3>🌟 เคล็ดลับโภชนาการ</h3>
+                        <p id="food-tip">"คุณยังไม่ได้กินโปรตีนมากพอวันนี้ ลองเพิ่มเนื้อสัตว์หรือถั่วดูสิ!"</p>
+                    </div>
+                    <button class="btn primary-btn quick-add-btn" id="quick-meal-btn">🧃 บันทึกมื้อด่วน: "ฉันเพิ่งกินข้าว!"</button>
+                </div>
+            </section>
+
+            <section id="plan" class="app-section">
+                <div class="section-header">
+                    <h2>🎯 Plan / Habits</h2>
+                </div>
+                <div class="plan-content">
+                    <div class="daily-missions">
+                        <h3>✅ Daily Missions (Today)</h3>
+                        <ul id="daily-missions-list">
+                            </ul>
+                        <button class="btn secondary-btn" id="add-mission-btn">Add New Mission</button>
+                        <button class="btn quick-add-btn" id="random-mission-btn">🎲 สุ่มภารกิจใหม่!</button>
+                    </div>
+                    <div class="plan-summary">
+                        <p>ภารกิจที่ทำสำเร็จวันนี้: <span id="missions-completed-count">0</span> / <span id="missions-total-count">0</span></p>
+                        <p>ความคืบหน้า: <strong id="missions-progress-percent">0%</strong></p>
+                    </div>
+                    <div class="custom-habits">
+                        <h3>✍️ Custom Habits</h3>
+                        <input type="text" id="custom-habit-input" placeholder="Add a new habit (e.g., 10 min stretching)">
+                        <button class="btn secondary-btn" id="add-habit-btn">Add Habit</button>
+                        <ul id="custom-habit-list">
+                            </ul>
+                    </div>
+                    <div class="plan-calendar">
+                        <h3>📆 Plan Calendar (Weekly View)</h3>
+                        <div class="calendar-grid">
+                            <div class="day">Mon</div>
+                            <div class="day">Tue</div>
+                            <div class="day active">Wed</div>
+                            <div class="day">Thu</div>
+                            <div class="day">Fri</div>
+                            <div class="day">Sat</div>
+                            <div class="day">Sun</div>
+                        </div>
+                        <p class="calendar-note">See your planned activities for the week!</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="graph" class="app-section">
+                <div class="section-header">
+                    <h2>📈 Analyze My Progress</h2>
+                </div>
+                <div class="graph-content">
+                    <div class="chart-container">
+                        <h3>📊 สุขภาพ / อารมณ์ / XP</h3>
+                        <div class="chart-controls">
+                            <button data-period="week" class="active">สัปดาห์</button>
+                            <button data-period="month">เดือน</button>
+                            <button data-period="year">ปี</button>
+                        </div>
+                        <canvas id="myChart"></canvas>
+                    </div>
+                    <div class="summary-stats">
+                        <h3>⏳ สรุปเวลา Focus</h3>
+                        <p>เวลารวม: <span id="total-focus-time">180 นาที</span> สัปดาห์นี้</p>
+                        <p>วันดีที่สุด: <span id="best-focus-day">วันอังคาร</span> ด้วย 60 นาที</p>
+                    </div>
+                    <div class="health-trend">
+                        <h3>📈 แนวโน้มสุขภาพรวม</h3>
+                        <p id="health-trend-message">"สัปดาห์นี้ คุณรู้สึก <strong>ดีขึ้น 13%</strong>! ทำได้ดีมาก!"</p>
+                    </div>
+                    <div class="reflection-journal">
+                        <h3>📖 บันทึกส่วนตัว (Optional)</h3>
+                        <textarea placeholder="เขียนบันทึกความรู้สึกวันนี้..."></textarea>
+                        <button class="btn secondary-btn">บันทึก</button>
+                    </div>
+                    <div class="ai-insight">
+                        <h3>🧭 Mirr Insight (AI)</h3>
+                        <p>"คุณดูเหมือนจะเครียดมากขึ้นในช่วงนี้ ลองพักสั้นๆ และฝึกสติบ้างนะ"</p>
+                    </div>
+                    <button class="btn primary-btn share-btn"><i class="fas fa-share-alt"></i> แชร์ความคืบหน้า</button>
+                </div>
+            </section>
+
+            <section id="account" class="app-section">
+                <div class="section-header">
+                    <h2>👤 Account / Settings</h2>
+                </div>
+                <div class="account-content">
+                    <div class="user-info">
+                        <h3>👤 ข้อมูลผู้ใช้</h3>
+                        <p><strong>ชื่อนักผจญภัย:</strong> <span id="account-username"></span></p>
+                        <p><strong>น้ำหนัก:</strong> <span id="account-weight"></span> kg</p>
+                        <p><strong>ส่วนสูง:</strong> <span id="account-height"></span> cm</p>
+                        <p><strong>BMI:</strong> <span id="account-bmi"></span></p>
+                        <p><strong>สถานะ BMI:</strong> <span id="account-bmi-status"></span></p>
+                        <button class="btn secondary-btn" id="edit-profile-btn">แก้ไขโปรไฟล์</button>
+
+                        <div class="edit-profile-fields" id="edit-profile-fields">
+                            <h4>แก้ไขข้อมูล</h4>
+                            <input type="text" id="edit-username-input" placeholder="ชื่อนักผจญภัย">
+                            <input type="number" id="edit-weight-input" placeholder="น้ำหนัก (ก.ก.)">
+                            <input type="number" id="edit-height-input" placeholder="ส่วนสูง (ซ.ม.)">
+                            <div class="btn-group">
+                                <button class="btn primary-btn" id="save-profile-btn">บันทึก</button>
+                                <button class="btn danger-btn" id="cancel-edit-btn">ยกเลิก</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="avatar-customization">
+                        <h3>🎨 Avatar / Outfit Settings</h3>
+                        <button class="btn primary-btn">ปรับแต่งอวตาร</button>
+                        <p>ปลดล็อกชุดใหม่ในร้านค้า!</p>
+                    </div>
+                    <div class="premium-shop">
+                        <h3>💎 Premium / Shop</h3>
+                        <button class="btn primary-btn">สำรวจร้านค้า</button>
+                        <p>ปลดล็อกฟีเจอร์พรีเมียมและไอเท็มพิเศษ</p>
+                    </div>
+                    <div class="history-log">
+                        <h3>🧾 ประวัติ / XP Log</h3>
+                        <p>ดูประวัติกิจกรรมและ XP ที่ได้รับอย่างละเอียด</p>
+                        <button class="btn secondary-btn">ดูบันทึก</button>
+                    </div>
+                    <div class="app-settings">
+                        <h3>⚙️ ตั้งค่าแอป</h3>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider round"></span>
+                        </label> การแจ้งเตือน
+                        <label class="switch">
+                            <input type="checkbox">
+                            <span class="slider round"></span>
+                        </label> เสียงประกอบ
+                        <button class="btn secondary-btn">ตั้งค่าเพิ่มเติม</button>
+                    </div>
+                    <button class="btn danger-btn" id="logout-btn-account"><i class="fas fa-sign-out-alt"></i> ออกจากระบบ</button>
+                </div>
+            </section>
+        </main>
+
+        <nav class="bottom-nav">
+            <a href="#home" class="nav-item active" data-section="home">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </a>
+            <a href="#food" class="nav-item" data-section="food">
+                <i class="fas fa-utensils"></i>
+                <span>Food</span>
+            </a>
+            <a href="#plan" class="nav-item" data-section="plan">
+                <i class="fas fa-calendar-check"></i>
+                <span>Plan</span>
+            </a>
+            <a href="#graph" class="nav-item" data-section="graph">
+                <i class="fas fa-chart-line"></i>
+                <span>Graph</span>
+            </a>
+            <a href="#account" class="nav-item" data-section="account">
+                <i class="fas fa-user"></i>
+                <span>Account</span>
+            </a>
+        </nav>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

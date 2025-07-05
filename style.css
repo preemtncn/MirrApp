@@ -1,0 +1,530 @@
+/* --- CSS (style.css) เริ่มต้นที่นี่ --- */
+        @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+        :root {
+            --primary-color: #5C6BC0;
+            --secondary-color: #8C9EFF;
+            --accent-color: #FFD54F;
+            --background-color: #F4F7F6;
+            --card-background: #FFFFFF;
+            --text-color: #333333;
+            --light-text-color: #666666;
+            --border-color: #E0E0E0;
+
+            --health-color: #66BB6A;
+            --energy-color: #42A5F5;
+            --mood-color: #FFB300;
+
+            --login-bg-dark: #2C3E50;
+            --login-text-light: #ECF0F1;
+
+            --avatar-healthy-color: #66BB6A;
+            --avatar-unhealthy-color: #EF5350;
+            --avatar-neutral-color: #9E9E9E;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Kanit', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px; /* Padding for desktop view */
+        }
+
+        .app-container {
+            background-color: var(--card-background);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 420px; /* Mobile-first max-width */
+            height: 90vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative; /* For responsive adjustments */
+        }
+
+        /* Desktop specific adjustments for larger screens */
+        @media (min-width: 768px) {
+            body {
+                background: linear-gradient(to bottom right, #e0f2f7, #c1dce3); /* Softer gradient for desktop */
+            }
+            .app-container {
+                max-width: 960px; /* Wider for desktop */
+                height: 85vh; /* Slightly less tall */
+                display: grid;
+                grid-template-columns: 280px 1fr; /* Sidebar and main content */
+                grid-template-rows: 1fr; /* Single row */
+                border-radius: 15px;
+                box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+            }
+            .main-content {
+                grid-column: 2 / 3; /* Main content takes second column */
+                padding-bottom: 0; /* No bottom nav overlay */
+            }
+            .bottom-nav {
+                display: none; /* Hide bottom nav on desktop */
+            }
+            .sidebar-nav {
+                display: flex; /* Show sidebar on desktop */
+                flex-direction: column;
+                background-color: var(--primary-color);
+                padding: 20px 0;
+                border-radius: 15px 0 0 15px;
+                color: white;
+                box-shadow: 5px 0 15px rgba(0, 0, 0, 0.1);
+            }
+            .sidebar-nav .app-logo {
+                font-family: 'Press Start 2P', cursive;
+                font-size: 2em;
+                text-align: center;
+                margin-bottom: 30px;
+                color: var(--accent-color);
+                text-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+            }
+            .sidebar-nav ul {
+                list-style: none;
+                padding: 0;
+                flex-grow: 1; /* Pushes content down */
+            }
+            .sidebar-nav li {
+                margin-bottom: 10px;
+            }
+            .sidebar-nav .nav-item {
+                flex-direction: row;
+                justify-content: flex-start;
+                padding: 12px 20px;
+                margin: 0 15px;
+                border-radius: 10px;
+                color: rgba(255, 255, 255, 0.8);
+                transition: background-color 0.3s ease, color 0.3s ease;
+            }
+            .sidebar-nav .nav-item i {
+                margin-bottom: 0;
+                margin-right: 15px;
+                font-size: 1.6em;
+            }
+            .sidebar-nav .nav-item span {
+                font-size: 1.1em;
+                font-weight: 500;
+            }
+            .sidebar-nav .nav-item.active {
+                background-color: var(--secondary-color);
+                color: white;
+            }
+            .sidebar-nav .nav-item:hover {
+                background-color: rgba(255, 255, 255, 0.1);
+                color: white;
+            }
+            .sidebar-nav .logout-btn {
+                background-color: #EF5350;
+                color: white;
+                margin: 20px 20px 0 20px;
+                padding: 10px 15px;
+                border-radius: 10px;
+                cursor: pointer;
+                text-align: center;
+                font-weight: 600;
+                transition: background-color 0.3s ease;
+            }
+            .sidebar-nav .logout-btn:hover {
+                background-color: #E53935;
+            }
+            /* Adjust padding for main content when sidebar is present */
+            .app-section {
+                padding-bottom: 20px; /* No bottom nav on desktop */
+            }
+            #login.app-section {
+                grid-column: 1 / 3; /* Login spans full width */
+                border-radius: 20px;
+            }
+        }
+
+
+        .main-content {
+            flex-grow: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .app-section {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 20px;
+            padding-bottom: 80px; /* Space for bottom nav on mobile */
+            overflow-y: auto;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
+            background-color: var(--background-color);
+            display: none;
+        }
+
+        .app-section.active {
+            opacity: 1;
+            transform: translateX(0);
+            display: flex; /* Default to flex, override for specific sections */
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: stretch;
+        }
+
+        /* Login specific centering */
+        #login.app-section.active {
+            justify-content: center;
+            align-items: center;
+        }
+        /* Other sections that need block-like scrolling */
+        #home.app-section.active,
+        #food.app-section.active,
+        #plan.app-section.active,
+        #graph.app-section.active,
+        #account.app-section.active {
+            display: block;
+        }
+
+
+        .section-header {
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .section-header h2 {
+            font-size: 1.6em;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 12px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            text-align: center;
+            text-decoration: none;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            border: none;
+        }
+        .btn:active { transform: translateY(1px); }
+        .primary-btn { background-color: var(--primary-color); color: white; }
+        .primary-btn:hover { background-color: #4A57A2; }
+        .secondary-btn { background-color: var(--secondary-color); color: white; }
+        .secondary-btn:hover { background-color: #727FE5; }
+        .quick-add-btn { background-color: var(--accent-color); color: var(--text-color); font-weight: 700; }
+        .quick-add-btn:hover { background-color: #FFC107; }
+        .danger-btn { background-color: #EF5350; color: white; }
+        .danger-btn:hover { background-color: #E53935; }
+
+
+        /* Input Fields */
+        input[type="text"], input[type="number"], textarea {
+            width: 100%;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-family: 'Kanit', sans-serif;
+            font-size: 1em;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+        input[type="text"]:focus, input[type="number"]:focus, textarea:focus { border-color: var(--primary-color); }
+        textarea { min-height: 80px; resize: vertical; }
+
+        /* Card-like elements */
+        .home-content > div, .food-content > div, .plan-content > div, .graph-content > div, .account-content > div {
+            background-color: var(--card-background);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        h3 {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Login Section Specifics */
+        #login.app-section {
+            background: linear-gradient(to bottom right, #34495e, #2c3e50);
+            background-image: url('https://via.placeholder.com/400x700/34495e/2c3e50?text=Fantasy+Landscape'); /* Placeholder for a background image */
+            background-size: cover;
+            background-position: center;
+            color: var(--login-text-light);
+            padding-bottom: 20px;
+        }
+        #login .login-content {
+            background-color: rgba(0, 0, 0, 0.4);
+            padding: 30px;
+            border-radius: 20px;
+            max-width: 300px;
+            width: 90%;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            text-align: center;
+        }
+        #login .app-title {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 1.8em;
+            color: var(--accent-color);
+            text-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+            margin-bottom: 10px;
+        }
+        #login .tagline { font-size: 0.9em; opacity: 0.8; margin-bottom: 20px; }
+        #login .character-glimpse {
+            width: 100px; height: 100px;
+            background-image: url('https://via.placeholder.com/100/ADD8E6/000000?text=Hero');
+            background-size: cover; background-position: center;
+            border-radius: 50%; border: 3px solid var(--accent-color);
+            margin: -60px auto 20px auto;
+            box-shadow: 0 0 15px rgba(255,213,79,0.7);
+        }
+        #login input {
+            background-color: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: var(--login-text-light); text-align: center; font-size: 1.1em;
+        }
+        #login input::placeholder { color: rgba(255, 255, 255, 0.6); }
+        #login input:focus { border-color: var(--accent-color); }
+        #login .btn.primary-btn { background-color: var(--accent-color); color: #333; font-weight: 700; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        #login .btn.primary-btn:hover { background-color: #FFC107; }
+        #login .quote { font-style: italic; font-size: 0.85em; color: rgba(255, 255, 255, 0.7); margin-top: 15px; }
+
+
+        /* Home Section Specifics */
+        .avatar-container { text-align: center; position: relative; margin-bottom: 25px; }
+        #user-avatar {
+            width: 160px; height: 160px; border-radius: 50%;
+            border: 5px solid var(--primary-color); object-fit: cover;
+            animation: pulse 2s infinite ease-in-out;
+            transition: all 0.5s ease-in-out;
+        }
+        #user-avatar.healthy { border-color: var(--avatar-healthy-color); filter: saturate(1.2); transform: scale(1); }
+        #user-avatar.unhealthy { border-color: var(--avatar-unhealthy-color); filter: grayscale(0.5); transform: scale(0.95); }
+        #user-avatar.normal { border-color: var(--primary-color); filter: none; transform: scale(1); }
+
+        .mood-indicator {
+            position: absolute; bottom: 0; right: 25%;
+            background-color: var(--accent-color); border-radius: 50%;
+            padding: 8px 12px; font-size: 1.8em; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transform: rotate(5deg); animation: bounce 1s infinite alternate ease-in-out;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(92, 107, 192, 0.7); }
+            50% { transform: scale(1.03); box-shadow: 0 0 0 10px rgba(92, 107, 192, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(92, 107, 192, 0); }
+        }
+        @keyframes bounce {
+            from { transform: translateY(0) rotate(5deg); }
+            to { transform: translateY(-5px) rotate(-2deg); }
+        }
+
+        .status-bars { margin-top: 20px; }
+        .status-bar { display: flex; align-items: center; margin-bottom: 12px; font-weight: 500; }
+        .status-bar .label { width: 70px; font-size: 0.95em; color: var(--light-text-color); }
+        .status-bar .bar-fill { height: 12px; border-radius: 6px; transition: width 0.5s ease-out; }
+        .status-bar.health .bar-fill { background-color: var(--health-color); }
+        .status-bar.energy .bar-fill { background-color: var(--energy-color); }
+        .status-bar.mood .bar-fill { background-color: var(--mood-color); }
+        .status-bar .value { margin-left: 10px; font-weight: 600; font-size: 0.9em; }
+
+        .daily-progress ul { list-style: none; padding: 0; }
+        .daily-progress ul li {
+            background-color: var(--background-color); padding: 10px 15px; border-radius: 8px;
+            margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center;
+            font-size: 0.95em; color: var(--text-color);
+        }
+        .daily-progress ul li .fa-check-circle { color: var(--health-color); font-size: 1.1em; }
+
+        .reward-summary p { font-size: 1.1em; margin-bottom: 10px; font-weight: 500; }
+        .reward-summary span { font-weight: 700; color: var(--primary-color); }
+        .level-progress-bar { background-color: var(--border-color); height: 8px; border-radius: 4px; overflow: hidden; }
+        .level-progress-bar .progress-fill { height: 100%; background-color: var(--accent-color); width: 0%; border-radius: 4px; transition: width 0.5s ease-out; }
+        .shortcut-btn { width: 100%; margin-top: 15px; }
+
+        /* Food Section Specifics */
+        .food-log .log-entry { display: flex; gap: 10px; margin-bottom: 15px; }
+        .food-log .log-entry input { flex-grow: 1; margin-bottom: 0; }
+        #food-list { list-style: none; padding: 0; }
+        #food-list li {
+            background-color: var(--background-color); padding: 10px 15px; border-radius: 8px;
+            margin-bottom: 8px; font-size: 0.95em; display: flex; justify-content: space-between; align-items: center;
+        }
+        .food-warning { color: var(--avatar-unhealthy-color); font-weight: 600; font-size: 0.85em; margin-top: 5px; }
+        .food-good { color: var(--avatar-healthy-color); font-weight: 600; font-size: 0.85em; margin-top: 5px; }
+
+        .water-tracker .water-controls {
+            display: flex; align-items: center; justify-content: space-between;
+            font-size: 1.1em; font-weight: 600; color: var(--primary-color);
+            gap: 10px;
+        }
+        .water-tracker .water-controls input {
+            flex-grow: 1; margin-bottom: 0;
+        }
+        .water-tracker .quick-add-btn { padding: 8px 15px; font-size: 0.9em; flex-shrink: 0; }
+
+        .energy-impact p, .tips-section p { font-size: 0.95em; line-height: 1.4; color: var(--light-text-color); }
+        .energy-impact strong { color: var(--health-color); }
+
+        /* Plan Section Specifics */
+        .daily-missions ul, .custom-habits ul { list-style: none; padding: 0; }
+        .daily-missions li, .custom-habits li {
+            background-color: var(--background-color); padding: 10px 15px; border-radius: 8px;
+            margin-bottom: 8px; display: flex; align-items: center;
+        }
+        .daily-missions label, .custom-habits label { display: flex; align-items: center; cursor: pointer; font-size: 1em; flex-grow: 1; }
+        .daily-missions input[type="checkbox"], .custom-habits input[type="checkbox"] { margin-right: 10px; width: 20px; height: 20px; accent-color: var(--primary-color); }
+
+        .plan-content .btn { width: 100%; margin-top: 10px; }
+
+        .plan-summary {
+            background-color: var(--background-color);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            font-size: 0.95em;
+            color: var(--text-color);
+        }
+        .plan-summary p { margin-bottom: 5px; }
+        .plan-summary strong { color: var(--primary-color); }
+
+
+        .plan-calendar .calendar-grid {
+            display: grid; grid-template-columns: repeat(7, 1fr); text-align: center;
+            gap: 5px; margin-bottom: 15px;
+        }
+        .plan-calendar .day { padding: 10px 0; border-radius: 8px; background-color: var(--background-color); color: var(--light-text-color); font-weight: 500; }
+        .plan-calendar .day.active { background-color: var(--primary-color); color: white; font-weight: 700; }
+        .calendar-note { font-size: 0.9em; color: var(--light-text-color); text-align: center; }
+
+        /* Graph Section Specifics */
+        .chart-container {
+            background-color: var(--card-background); padding: 20px; border-radius: 15px;
+            margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+        canvas { max-width: 100%; height: 200px; }
+
+        .chart-controls {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 15px;
+        }
+        .chart-controls button {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background-color 0.3s ease;
+        }
+        .chart-controls button.active, .chart-controls button:hover {
+            background-color: var(--primary-color);
+        }
+
+        .summary-stats p, .health-trend p, .ai-insight p { font-size: 0.95em; line-height: 1.4; color: var(--light-text-color); margin-bottom: 8px; }
+        .summary-stats span, .health-trend strong { font-weight: 600; color: var(--primary-color); }
+
+        .share-btn { width: 100%; margin-top: 15px; }
+
+        /* Account Section Specifics */
+        .user-info p { margin-bottom: 8px; font-size: 1em; }
+        .user-info strong { color: var(--primary-color); }
+        .user-info span { font-weight: 500; }
+        .edit-profile-fields {
+            display: none;
+            margin-top: 15px;
+            border-top: 1px solid var(--border-color);
+            padding-top: 15px;
+        }
+        .edit-profile-fields.active {
+            display: block;
+        }
+        .edit-profile-fields input {
+            margin-bottom: 10px;
+        }
+        .edit-profile-fields .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .edit-profile-fields .btn-group button {
+            flex: 1;
+        }
+
+
+        .switch { position: relative; display: inline-block; width: 40px; height: 24px; margin-right: 10px; vertical-align: middle; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--border-color); transition: .4s; border-radius: 24px; }
+        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--primary-color); }
+        input:focus + .slider { box-shadow: 0 0 1px var(--primary-color); }
+        input:checked + .slider:before { transform: translateX(16px); }
+
+        /* Bottom Navigation (Mobile Only) */
+        .bottom-nav {
+            display: flex; /* Flex on mobile */
+            justify-content: space-around;
+            align-items: center;
+            padding: 10px 0;
+            background-color: var(--card-background);
+            border-top: 1px solid var(--border-color);
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.05);
+            z-index: 100;
+            position: absolute; /* Stick to bottom */
+            bottom: 0;
+            width: 100%;
+        }
+        .sidebar-nav {
+            display: none; /* Hidden on mobile */
+        }
+
+        .nav-item {
+            display: flex; flex-direction: column; align-items: center;
+            color: var(--light-text-color); text-decoration: none; font-size: 0.85em;
+            padding: 5px; border-radius: 8px; transition: color 0.3s ease, background-color 0.3s ease;
+        }
+        .nav-item i { font-size: 1.5em; margin-bottom: 5px; }
+        .nav-item.active { color: var(--primary-color); }
+        .nav-item:hover { color: var(--primary-color); }
+
+        /*ห้ามแก้ตรงนี้*/
+        /* Responsive adjustments for smaller screens (e.g., iPhone SE) */
+        @media (max-width: 480px) {
+            .app-container { border-radius: 0; height: 100vh; max-width: 100%; }
+            body { padding: 0; }
+            #login.app-section, .app-section { padding: 15px; padding-bottom: 70px; }
+            .bottom-nav { padding: 8px 0; }
+            .nav-item { font-size: 0.8em; padding: 3px; }
+            .nav-item i { font-size: 1.3em; }
+        }
+    
